@@ -21,3 +21,4 @@ Add following code to your application class
 ```
 
 ## What you will see in your channel
+![alt text](https://github.com/grootan/slackoncrash/blob/master/Screen%20Shot%202017-10-23%20at%201.10.55%20AM.png)
