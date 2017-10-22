@@ -1,7 +1,7 @@
 # slackoncrash
 Small Android library to send crash notificaiton of your app to slack channel
 
-## Download Lib
+## Download Lib [ Gradle support comming soon!! ]
 http://bit.ly/2xX0jFv
 
 ## How to use
@@ -33,6 +33,7 @@ AppVersion
 StackTrace
 
 ## Roadmap
+Gradle support
 Allow to record custom or debug messages
 Add count of the crash occurs
 
