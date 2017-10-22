@@ -1,35 +1,25 @@
 package com.grootan.slackoncrash;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
-import android.support.annotation.NonNull;
+import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.arasthel.asyncjob.AsyncJob;
 import com.grootan.slackoncrash.httpclient.SlackHttpClient;
 import com.grootan.slackoncrash.models.Field;
 import com.grootan.slackoncrash.models.MessageType;
+import com.grootan.slackoncrash.utils.AsyncTaskUtils;
 import com.grootan.slackoncrash.utils.DBModel;
 import com.grootan.slackoncrash.utils.DatabaseHelper;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 /**
  * Created by lokeshravichandru on 22/10/17.
@@ -87,7 +77,7 @@ public final class SlackOnCrash {
                             StringWriter sw = new StringWriter();
                             PrintWriter pw = new PrintWriter(sw);
                             throwable.printStackTrace(pw);
-                            String stackTraceString = sw.toString().replaceAll("\n\t","\n");
+                            String stackTraceString = sw.toString().replaceAll("\n\t", "\n");
                             SlackHttpClient.save(slackHook, stackTraceString, _params, MessageType.ERROR);
                             killCurrentProcess();
                         }
@@ -106,8 +96,7 @@ public final class SlackOnCrash {
         System.exit(10);
     }
 
-    public static Context getContext()
-    {
+    public static Context getContext() {
         return _context;
     }
 
@@ -118,14 +107,14 @@ public final class SlackOnCrash {
      * @param value to set value for message field. Must not be null
      */
 
-    public static void addProperty(String key, String value,boolean isOneLine) {
+    public static void addProperty(String key, String value, boolean isOneLine) {
         if (key == null || key == "" || value == null || value == "") {
             Log.e(TAG, "Key and Value must have a value");
         }
         if (_params == null) {
             _params = new ArrayList<>();
         }
-        Field field =new Field();
+        Field field = new Field();
         field.setTitle(key);
         field.setValue(value);
         field.setShort(isOneLine);
@@ -134,18 +123,17 @@ public final class SlackOnCrash {
 
     public static void start() {
         if(isNetworkAvailable()) {
-            new AsyncJob.AsyncJobBuilder<Boolean>()
-                    .doInBackground(new AsyncJob.AsyncAction<Boolean>() {
-                        @Override
-                        public Boolean doAsync() {
-                            List<DBModel> models = DatabaseHelper.getInstance().getAll();
-                            for (DBModel model : models) {
-                                SlackHttpClient.sendMessage(model);
-                                DatabaseHelper.getInstance().deleteObject(model.getId());
-                            }
-                            return true;
-                        }
-                    }).create().start();
+            AsyncTaskUtils.execute(new AsyncTask<Void, Object, Object>() {
+                @Override
+                protected Object doInBackground(Void... voids) {
+                    List<DBModel> models = DatabaseHelper.getInstance().getAll();
+                    for (DBModel model : models) {
+                        SlackHttpClient.sendMessage(model);
+                        DatabaseHelper.getInstance().deleteObject(model.getId());
+                    }
+                    return null;
+                }
+            });
         }
     }
 
@@ -156,10 +144,6 @@ public final class SlackOnCrash {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
-
-
-
 
 
 }

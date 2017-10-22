@@ -1,5 +1,27 @@
 apply plugin: 'com.android.library'
 
+ext {
+
+    publishedGroupId = 'com.grootan'
+    libraryName = 'slackoncrash'
+    artifact = 'slackoncrash'
+
+    libraryDescription = 'Small Android library to send crash notificaiton of your app to slack channel'
+
+    siteUrl = 'https://github.com/grootan/slackoncrash'
+    gitUrl = 'https://github.com/grootan/slackoncrash.git'
+
+    libraryVersion = '0.0.1'
+
+    developerId = 'lokesh'
+    developerName = 'Lokesh Ravichandru'
+    developerEmail = 'lokesh.ravichandru@grootan.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
@@ -30,7 +52,6 @@ dependencies {
     compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
-    compile 'com.arasthel:asyncjob-library:1.0.3'
     compile 'net.zetetic:android-database-sqlcipher:3.5.4@aar'
     testCompile 'junit:junit:4.12'
 }
