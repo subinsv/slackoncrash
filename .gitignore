@@ -4,3 +4,5 @@ Git-SlackOnCrash.iml
 Android-slackoncrash.iml
 build/
 slackoncrash/slackoncrash-slackoncrash.iml
+local.properties
+app/app.iml
